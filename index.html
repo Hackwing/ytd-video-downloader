@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Video Downloader</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        input,
+        select,
+        button,
+        textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 200px;
+            resize: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🎬 Video Downloader</h1>
+
+    <label for="url">📎 Video or Playlist URL:</label>
+    <input type="text" id="url" placeholder="https://youtube.com/..." />
+
+    <label for="format">🎚 Format:</label>
+    <select id="format">
+        <option value="single-mp3">MP3 (Single Video)</option>
+        <option value="single-mp4">MP4 (Single Video)</option>
+        <option value="playlist-mp3">MP3 (Playlist)</option>
+    </select>
+
+    <label for="downloadPath">📂 Download Location:</label>
+    <input type="text" id="downloadPath" placeholder="C:\Downloads or /home/user/Videos" />
+
+    <button id="downloadBtn">Download</button>
+
+    <h3>📥 Download Progress:</h3>
+    <progress id="progressBar" value="0" max="100" style="width: 100%; height: 20px;"></progress>
+    <div id="progressPercent">0%</div>
+
+
+    <h3>📜 Output:</h3>
+    <textarea id="output" readonly></textarea>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>

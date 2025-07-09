@@ -1,0 +1,37 @@
+{
+    "name": "video-downloader-ui",
+    "version": "1.0.0",
+    "description": "Native UI for PowerShell video downloader",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "build": {
+        "appId": "com.ilham.videodownloader",
+        "productName": "Video Downloader",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "**/*"
+        ],
+        "extraFiles": [
+            {
+                "from": "download_video.ps1",
+                "to": "download_video.ps1"
+            }
+        ],
+        "win": {
+            "target": "nsis"
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": true,
+            "allowToChangeInstallationDirectory": true
+        }
+    },
+    "devDependencies": {
+        "electron": "^30.0.0",
+        "electron-builder": "^26.0.12"
+    }
+}
