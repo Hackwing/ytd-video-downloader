@@ -21,7 +21,8 @@ app.whenReady().then(createWindow);
 // 📦 IPC Listener: Receives params from renderer
 ipcMain.on('run-script', (event, args) => {
     // 📍 Locate PS script from unpacked directory (via extraFiles)
-    const psScriptPath = path.join(path.dirname(process.execPath), 'download_video.ps1');
+    // const psScriptPath = path.join(path.dirname(process.execPath), 'download_video.ps1');
+    const psScriptPath = path.join(__dirname, 'download_video.ps1');
 
     // ❗ Check if script exists
     if (!fs.existsSync(psScriptPath)) {
