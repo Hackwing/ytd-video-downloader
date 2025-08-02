@@ -1,8 +1,7 @@
-// main.js (Electron main process full)
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
-const ffmpegPath = require('ffmpeg-static'); // npm package for cross-platform ffmpeg
+const ffmpegPath = require('ffmpeg-static');
 
 let win;
 
@@ -13,7 +12,7 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            nodeIntegration: false,
+            nodeIntegration: false
         }
     });
 
@@ -42,9 +41,9 @@ ipcMain.handle('choose-folder', async (event) => {
     return result.canceled ? null : result.filePaths[0];
 });
 
-function downloadSong(url, folder, format) {
+function downloadSong(url, folder, format, isPlaylist) {
     const ytDlpPath = path.join(__dirname, 'resources', 'yt-dlp');
-    const outputTemplate = path.join(folder, '%(title)s.%(ext)s');
+    const outputTemplate = path.join(folder, '%(playlist_index)s - %(title)s.%(ext)s');
 
     let args = [url, '-o', outputTemplate, '--ffmpeg-location', ffmpegPath];
 
@@ -54,6 +53,13 @@ function downloadSong(url, folder, format) {
         args.push('-f', '22/bestvideo+bestaudio/best');
     } else {
         return Promise.reject(new Error('Invalid format selected'));
+    }
+
+    // Add playlist option if true
+    if (isPlaylist) {
+        args.push('--yes-playlist');
+    } else {
+        args.push('--no-playlist');
     }
 
     return new Promise((resolve, reject) => {
@@ -71,9 +77,9 @@ function downloadSong(url, folder, format) {
     });
 }
 
-ipcMain.handle('download-song', async (_event, url, folder, format) => {
+ipcMain.handle('download-song', async (_event, url, folder, format, isPlaylist) => {
     if (!url || !folder || !format) {
         throw new Error('URL, folder path, and format are required');
     }
-    return await downloadSong(url, folder, format);
+    return await downloadSong(url, folder, format, isPlaylist);
 });
