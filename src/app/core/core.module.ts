@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { YtdDownloaderComponent } from './ytd-downloader/ytd-downloader.component';
+import { MaterialModule } from '../material/material.module';
 
 
 
@@ -9,7 +10,8 @@ import { YtdDownloaderComponent } from './ytd-downloader/ytd-downloader.componen
     YtdDownloaderComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule
   ]
 })
 export class CoreModule { }
