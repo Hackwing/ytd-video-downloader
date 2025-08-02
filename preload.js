@@ -1,7 +1,8 @@
-// preload.js (Electron preload script)
+// preload.js
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     chooseFolder: () => ipcRenderer.invoke('choose-folder'),
-    downloadSong: (url, folder, format, isPlaylist) => ipcRenderer.invoke('download-song', url, folder, format, isPlaylist)
+    downloadSong: (url, folder, mediaType, format, isPlaylist) =>
+        ipcRenderer.invoke('download-song', url, folder, mediaType, format, isPlaylist)
 });

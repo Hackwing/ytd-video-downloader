@@ -1,3 +1,4 @@
+// main.js
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -28,7 +29,6 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
-
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
@@ -41,21 +41,22 @@ ipcMain.handle('choose-folder', async (event) => {
     return result.canceled ? null : result.filePaths[0];
 });
 
-function downloadSong(url, folder, format, isPlaylist) {
+function downloadSong(url, folder, mediaType, format, isPlaylist) {
     const ytDlpPath = path.join(__dirname, 'resources', 'yt-dlp');
     const outputTemplate = path.join(folder, '%(playlist_index)s - %(title)s.%(ext)s');
 
-    let args = [url, '-o', outputTemplate, '--ffmpeg-location', ffmpegPath];
+    let args = ['-o', outputTemplate, '--ffmpeg-location', ffmpegPath, url];
 
-    if (format === 'mp3') {
-        args.push('-x', '--audio-format', 'mp3');
-    } else if (format === 'mp4') {
-        args.push('-f', '22/bestvideo+bestaudio/best');
+    if (mediaType === 'audio') {
+        args.push('-x', '--audio-format', format);
+    } else if (mediaType === 'video') {
+        args.push('-f', 'bestvideo+bestaudio/best'); // Best video+audio format
+        args.push('--merge-output-format', format);  // Merge to desired container
+        args.push('--recode-video', format);         // Re-encode video to ensure format
     } else {
-        return Promise.reject(new Error('Invalid format selected'));
+        return Promise.reject(new Error('Invalid media type'));
     }
 
-    // Add playlist option if true
     if (isPlaylist) {
         args.push('--yes-playlist');
     } else {
@@ -77,9 +78,9 @@ function downloadSong(url, folder, format, isPlaylist) {
     });
 }
 
-ipcMain.handle('download-song', async (_event, url, folder, format, isPlaylist) => {
-    if (!url || !folder || !format) {
-        throw new Error('URL, folder path, and format are required');
+ipcMain.handle('download-song', async (_event, url, folder, mediaType, format, isPlaylist) => {
+    if (!url || !folder || !mediaType || !format) {
+        throw new Error('URL, folder, media type, and format are all required');
     }
-    return await downloadSong(url, folder, format, isPlaylist);
+    return await downloadSong(url, folder, mediaType, format, isPlaylist);
 });

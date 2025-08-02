@@ -2,15 +2,47 @@
   "name": "ytd-downloader",
   "version": "0.0.0",
   "main": "main.js",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng build --base-href ./ && electron . --disable-gpu",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint",
     "audit": "npm audit --json > audit.json",
-    "test": "ng test"
+    "dist:linux": "electron-builder --linux",
+    "dist:win": "electron-builder --win",
+    "dist": "electron-builder"
   },
-  "private": true,
+  "build": {
+    "productName": "YTD-Downloader",
+    "appId": "com.yourcompany.ytddownloader",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "dist/",
+      "resources/",
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "icon": "build/icon.png"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "asar": true
+  },
   "dependencies": {
     "@angular/animations": "^16.1.0",
     "@angular/cdk": "^16.2.14",
@@ -37,6 +69,7 @@
     "@angular/compiler-cli": "^16.1.0",
     "@types/jasmine": "~4.3.0",
     "electron": "^37.2.5",
+    "electron-builder": "^26.0.12",
     "electron-packager": "^17.1.2",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",

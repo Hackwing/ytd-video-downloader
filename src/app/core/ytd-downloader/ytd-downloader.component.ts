@@ -9,10 +9,17 @@ export class YtdDownloaderComponent {
 
   youtubeUrl = '';
   folderPath = '';
-  format: 'mp3' | 'mp4' = 'mp3';
+  mediaType: 'audio' | 'video' = 'audio';
+  audioFormats = ['mp3', 'wav', 'aac', 'flac'];
+  videoFormats = ['mp4', 'mkv', 'webm'];
+  selectedFormat = '';
   isPlaylist = false;
   message = '';
   progressBarVisible = false;
+
+  get availableFormats() {
+    return this.mediaType === 'audio' ? this.audioFormats : this.videoFormats;
+  }
 
   async chooseFolder() {
     const selected = await (window as any).electronAPI.chooseFolder();
@@ -20,8 +27,8 @@ export class YtdDownloaderComponent {
   }
 
   async onDownload() {
-    if (!this.youtubeUrl || !this.folderPath || !this.format) {
-      this.message = 'Please fill all fields.';
+    if (!this.youtubeUrl || !this.folderPath || !this.selectedFormat) {
+      this.message = 'Please fill all fields and select format.';
       return;
     }
     this.progressBarVisible = true;
@@ -30,7 +37,8 @@ export class YtdDownloaderComponent {
       const result = await (window as any).electronAPI.downloadSong(
         this.youtubeUrl,
         this.folderPath,
-        this.format,
+        this.mediaType,
+        this.selectedFormat,
         this.isPlaylist
       );
       this.message = result;
@@ -40,5 +48,4 @@ export class YtdDownloaderComponent {
       this.progressBarVisible = false;
     }
   }
-
 }
