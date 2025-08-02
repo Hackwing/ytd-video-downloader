@@ -140,3 +140,4 @@ vite.config.ts.timestamp-*
 
 # angular build cache
 /angular
+audit.json
